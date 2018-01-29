@@ -24,3 +24,9 @@ processTypes ((t1, t2), c) f = ft2 >>= \y -> Just ((fst (fromJust ft1) , fst y),
 maybeTuple :: (Maybe a, Maybe b) -> Maybe (a, b)
 maybeTuple (Just x, Just y) = Just (x, y)
 maybeTuple _ = Nothing
+
+allVSall :: [a] -> [a] -> (a -> a -> b -> Maybe b) -> b -> Maybe b
+allVSall (x:xs) ys fun ctx = (allVSall' x ys fun ctx) >>= (allVSall xs ys fun)
+
+allVSall' :: a -> [a] -> (a -> a -> b -> Maybe b) -> b -> Maybe b
+allVSall' x (y:ys) fun ctx = (fun x y ctx) >>= (allVSall' x ys fun)
